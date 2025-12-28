@@ -1,0 +1,23 @@
+stages:
+  - plan
+  - apply
+
+# This rule ensures we use your specific runner
+default:
+  tags:
+    - lab-runner
+
+terraform-plan:
+  stage: plan
+  script:
+    - terraform init
+    - terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - tfplan
+
+terraform-apply:
+  stage: apply
+  script:
+    - terraform apply -auto-approve tfplan
+  when: manual # This adds a "Play" button in GitLab so it doesn't deploy until you click it
